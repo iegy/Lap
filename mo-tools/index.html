@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mo Tools | ادوات مفيدة للمطورين</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="terminal-frame">
+      <div class="theme-selector">
+        <label for="theme">اختر الثيم:</label>
+        <select id="theme" onchange="changeTheme(this.value)">
+          <option value="neon">Neon Green</option>
+          <option value="purple">Purple Cyber</option>
+          <option value="blue">Blue Ocean</option>
+        </select>
+      </div>
+      <h1 class="glow-text">Mo Tools</h1>
+      <p>ادوات مفيدة للمطورين - من <span class="glow-text">Mohammed Hussein</span></p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="terminal-frame">
+      <h2>قائمة الادوات</h2>
+      <p>اختر الأداة اللى عايزها:</p>
+      
+      <div class="tools-grid">
+        <!-- HTML Viewer -->
+        <a href="/tools/html-viewer/" class="tool-card">
+          <h3>📄 مستعرض HTML</h3>
+          <p>اكتب و شاهد كود HTML اونلاين مع معاينة فورية</p>
+        </a>
+        
+        <!-- JSON Formatter -->
+        <a href="/tools/json-formatter/" class="tool-card">
+          <h3>📋 منسق JSON</h3>
+          <p>تنسيق و تصحيح و تصغير كود JSON</p>
+        </a>
+        
+        <!-- Base64 Encoder -->
+        <a href="/tools/base64-encoder/" class="tool-card">
+          <h3>🔐 Base64 Encoder/Decoder</h3>
+          <p>تحويل نص إلى Base64 و العكس</p>
+        </a>
+        
+        <!-- Color Picker -->
+        <a href="/tools/color-picker/" class="tool-card">
+          <h3>🎨 اختيار الألوان</h3>
+          <p>اختر الألوان و احصل على كود HEX, RGB, HSL</p>
+        </a>
+        
+        <!-- CSS Beautifier -->
+        <a href="/tools/css-beautifier/" class="tool-card">
+          <h3>💅 منسق CSS</h3>
+          <p>تنسيق و تصغير كود CSS</p>
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Made with <span class="heart">♥️</span> by Mohammed Hussein / <a href="https://iegy.net" target="_blank">iegy.net</a></p>
+    </footer>
+  </div>
+</body>
+</html>

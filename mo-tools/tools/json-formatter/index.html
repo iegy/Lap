@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منسق JSON | Mo Tools</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/script.js" defer></script>
+  <style>
+    .json-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .input-section, .output-section {
+      flex: 1;
+    }
+    
+    #input-json, #output-json {
+      width: 100%;
+      min-height: 400px;
+      font-size: 0.9rem;
+      direction: ltr;
+      text-align: left;
+      font-family: 'Consolas', monospace;
+    }
+    
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    
+    .valid {
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+    
+    .invalid {
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
+    
+    @media (max-width: 768px) {
+      .json-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="terminal-frame">
+      <div class="theme-selector">
+        <label for="theme">اختر الثيم:</label>
+        <select id="theme" onchange="changeTheme(this.value)">
+          <option value="neon">Neon Green</option>
+          <option value="purple">Purple Cyber</option>
+          <option value="blue">Blue Ocean</option>
+        </select>
+      </div>
+      <h1 class="glow-text">📋 منسق JSON</h1>
+      <p>تنسيق، تصحيح، و تصغير كود JSON</p>
+      <a href="/" class="btn">⬅ العودة للقائمة</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="terminal-frame">
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="formatJSONCode()">📐 تنسيق</button>
+        <button class="btn btn-primary" onclick="minifyJSONCode()">🗜 تصغير</button>
+        <button class="btn" onclick="clearAll()">🗑 مسح الكل</button>
+        <button class="btn" onclick="loadExample()">📚 مثال</button>
+        <button class="btn copy-btn" data-target="output-json">📋 نسخ النتيجة</button>
+      </div>
+      
+      <div id="status" class="status"></div>
+      
+      <div class="json-container">
+        <!-- Input Section -->
+        <div class="input-section">
+          <h3>📥 المدخلات</h3>
+          <textarea id="input-json" placeholder='اكتب JSON هنا... مثلا: {"name": "Mo Tools", "version": 1.0}'></textarea>
+        </div>
+        
+        <!-- Output Section -->
+        <div class="output-section">
+          <h3>📤 النتيجة</h3>
+          <textarea id="output-json" readonly placeholder="ستظهر النتيجة هنا..."></textarea>
+        </div>
+      </div>
+      
+      <div class="mt-20">
+        <h3>💡 نصائح:</h3>
+        <ul>
+          <li>ادخل JSON غير منسق و اضغط "تنسيق" للحصول على JSON منسق</li>
+          <li>اضغط "تصغير" لإزالة المسافات و الأسطر الزائدة</li>
+          <li>إذا كان JSON غير صالح، ستظهر رسالة خطأ</li>
+          <li>يمكنك نسخ النتيجة بضغطة زر</li>
+        </ul>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Made with <span class="heart">♥️</span> by Mohammed Hussein / <a href="https://iegy.net" target="_blank">iegy.net</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // Load saved data from localStorage
+    function loadSavedData() {
+      const savedInput = loadFromLocalStorage('json-formatter-input');
+      if (savedInput) {
+        document.getElementById('input-json').value = savedInput;
+      }
+    }
+
+    // Save input to localStorage
+    function saveInput() {
+      const input = document.getElementById('input-json').value;
+      saveToLocalStorage('json-formatter-input', input);
+    }
+
+    // Format JSON
+    function formatJSONCode() {
+      const input = document.getElementById('input-json').value;
+      const outputElement = document.getElementById('output-json');
+      const statusElement = document.getElementById('status');
+      
+      if (!input.trim()) {
+        showError('status', 'ادخل JSON أولاً');
+        return;
+      }
+      
+      if (isValidJSON(input)) {
+        const formatted = formatJSON(input);
+        outputElement.value = formatted;
+        statusElement.textContent = '✓ JSON صالح و منسق';
+        statusElement.className = 'status valid';
+        saveInput();
+      } else {
+        showError('status', '❌ JSON غير صالح - تأكد من الصياغة');
+        statusElement.className = 'status invalid';
+      }
+    }
+
+    // Minify JSON
+    function minifyJSONCode() {
+      const input = document.getElementById('input-json').value;
+      const outputElement = document.getElementById('output-json');
+      const statusElement = document.getElementById('status');
+      
+      if (!input.trim()) {
+        showError('status', 'ادخل JSON أولاً');
+        return;
+      }
+      
+      if (isValidJSON(input)) {
+        const minified = minifyJSON(input);
+        outputElement.value = minified;
+        statusElement.textContent = '✓ JSON صالح و مصغر';
+        statusElement.className = 'status valid';
+        saveInput();
+      } else {
+        showError('status', '❌ JSON غير صالح - تأكد من الصياغة');
+        statusElement.className = 'status invalid';
+      }
+    }
+
+    // Clear all
+    function clearAll() {
+      document.getElementById('input-json').value = '';
+      document.getElementById('output-json').value = '';
+      document.getElementById('status').textContent = '';
+      document.getElementById('status').className = 'status';
+      localStorage.removeItem('json-formatter-input');
+    }
+
+    // Load example
+    function loadExample() {
+      const example = `{
+  "name": "Mo Tools",
+  "version": "1.0.0",
+  "description": "موقع ادوات مفيدة للمطورين",
+  "author": "Mohammed Hussein",
+  "website": "https://iegy.net",
+  "tools": [
+    {
+      "id": 1,
+      "name": "HTML Viewer",
+      "description": "مستعرض HTML اونلاين"
+    },
+    {
+      "id": 2,
+      "name": "JSON Formatter",
+      "description": "منسق JSON"
+    },
+    {
+      "id": 3,
+      "name": "Base64 Encoder",
+      "description": "تحويل إلى Base64"
+    },
+    {
+      "id": 4,
+      "name": "Color Picker",
+      "description": "اختيار الألوان"
+    },
+    {
+      "id": 5,
+      "name": "CSS Beautifier",
+      "description": "منسق CSS"
+    }
+  ],
+  "settings": {
+    "theme": "neon",
+    "autoFormat": true,
+    "showLineNumbers": true
+  }
+}`;
+      
+      document.getElementById('input-json').value = example;
+      formatJSONCode();
+    }
+
+    // Auto-format on input (optional - commented out by default)
+    // document.getElementById('input-json').addEventListener('input', function() {
+    //   saveInput();
+    // });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSavedData();
+    });
+  </script>
+</body>
+</html>
