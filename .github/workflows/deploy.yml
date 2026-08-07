@@ -4,7 +4,10 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'mo-tools/**'
+      - 'assets/**'
+      - 'tools/**'
+      - 'index.html'
+      - 'README.md'
 
 jobs:
   deploy:
